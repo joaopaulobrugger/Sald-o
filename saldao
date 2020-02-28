@@ -1,0 +1,229 @@
+
+
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import tests.SaldaoTeste;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+
+public class TesteLojas {
+
+    //Cria um arquivo XLS chamado "Automacao_SNI" na pasta "C:/teste"
+    private static final String arquivo = "C:/teste/saldao.xls";
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        //Inicializa o arquivo XLS chamado "Automacao_SNI" na pasta "C:/teste"
+        String arquivo = "C:/teste/Saldao.xls";
+        //Cria um novo documento XLS (Esta ação é necessária para que o sistema inicialize a planilha Excell.
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //Cria dentro do arquivo XLS a planilha chamada "Saldao"
+        HSSFSheet sheetDadosSaldao = workbook.createSheet("Saldao");
+
+
+        // Criando uma nova instância do Webdriver e abrindo a instância com Firefox
+        System.setProperty("webdriver.gecko.driver", "C:\\\\gecko\\geckodriver.exe");
+        WebDriver driver = new FirefoxDriver();
+
+        //Limpa o JAVA Garbage Collector para evitar erros durante o processo.
+        System.gc();
+
+
+        //Acessa página desejada
+        //Melhores da Campanha
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fofertas-e-outlet%2Fofertas-e-outlet-melhores-da-campanha");
+        //Só Na Internet
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fofertas-e-outlet%2Fofertas-e-outlet-so-na-internet");
+        //Outlet
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fofertas-e-outlet%2Fofertas-e-outlet-outlet");
+        //Mais Produtos
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fmais-produtos");
+        //home
+        //driver.get("https://www.avoncomigo.avon.com.br/widget/avonwg2/#/login");
+        //Ações Extra
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fbanner-esquenta-black-friday");
+        driver.get("https://www.avoncomigo.avon.com.br/widget/avonwg2/#/login");
+
+        //Fazer login com a conta 00000506 // Digital19 e acessar a página Saldão por meio de target page
+        driver.findElement(By.xpath("//input[@name='userName']")).sendKeys("00000501");
+        driver.findElement(By.xpath("//input[@id='pwd']")).sendKeys("Digital19");
+        driver.findElement(By.xpath("//button[@id='loginBtn']")).click();
+        Thread.sleep(10 * 1000);
+        driver.get("https://www.avoncomigo.avon.com.br/webapp/wcs/stores/servlet/pt/avoncpg08/mais-produtos");
+        // Mudar a campanha. cada campanha nova copiar xpath
+        //driver.findElement(By.id("btn-campaign")).click();
+        // Thread.sleep(15 * 1000);
+        // driver.findElement(By.xpath("//*[@id=\"dijit_layout_ContentPane_1\"]/div/div/a[1]/figure/img")).click();
+        //driver.get("https://www.avoncomigo.avon.com.br/webapp/wcs/stores/servlet/pt/avoncpg03/mais-produtos");
+
+        //troca de campanha
+        //Thread.sleep(15 * 1000);
+        // driver.findElement(By.id("btn-campaign")).click();
+        // Thread.sleep(15 * 1000);
+        // driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[1]/div[2]/div[1]/div/div[1]/section/div/div[2]/div/div[1]/div/div/a[2]")).click();
+        // driver.get("https://www.avoncomigo.avon.com.br/webapp/wcs/stores/servlet/pt/avoncpg20/banner-home-vita");
+
+
+        //Espera 15 segundos até que a página seja carregada por completo
+        Thread.sleep(20 * 1000);
+
+        //Retorna o nome dos produtos
+        List<WebElement> listaSaldaoNome = driver.findElements(By.xpath("//div[@class='product_name']//span[@class='linkOferta']"));
+        for (WebElement produtosNome : listaSaldaoNome) {
+        }
+
+        //Retorna o LN dos produtos
+        List<WebElement> listaSaldaoLN = driver.findElements(By.xpath("//div[@class='product_name']//span[@id]"));
+        for (WebElement produtosLN : listaSaldaoLN) {
+        }
+
+        //Retorna o preço dos produtos
+        List<WebElement> listaSaldaoPreco = driver.findElements(By.xpath("//div[@class='profit']//p[@class='amount']//span[@class='right']"));
+        for (WebElement produtosPreco : listaSaldaoPreco) {
+        }
+
+        //Retorna o nome dos produtos
+        List<WebElement> listaSaldaoRevenda = driver.findElements(By.xpath("//div[@class='profit']//p[@class='resale']//span[@class='right'] "));
+        for (WebElement produtosRevenda : listaSaldaoRevenda) {
+        }
+
+        //Retorna o preço lucre
+        List<WebElement> listaSaldaoLucre = driver.findElements(By.xpath("//div[@class='profit']//p[@class='profitability']//span[@class='right'] "));
+        for (WebElement produtosLucre : listaSaldaoLucre) {
+        }
+
+
+
+        //Escreve na memoria o nome dos produtos
+        int rownum = 0;
+        for (WebElement produtosNome : listaSaldaoNome) {
+            Row rowNome = sheetDadosSaldao.createRow(rownum++);
+            int cellnum = 0;
+
+            Cell cellNome = rowNome.createCell(cellnum++);
+            cellNome.setCellValue(produtosNome.getText());
+
+        }
+
+        //Escreve na memoria o LN dos produtos
+        rownum = 0;
+        for (WebElement produtosLN : listaSaldaoLN) {
+
+            Row rowLN = sheetDadosSaldao.getRow(rownum++);
+            int cellnum = 1;
+
+            Cell cellLN = rowLN.createCell(cellnum++);
+            cellLN.setCellValue(produtosLN.getText());
+
+        }
+
+        //Escreve na memoria o preço dos produtos
+        rownum = 0;
+        for (WebElement produtosPreco : listaSaldaoPreco) {
+
+            Row rowProduto = sheetDadosSaldao.getRow(rownum++);
+            int cellnum = 2;
+
+            Cell cellPreco = rowProduto.createCell(cellnum++);
+            cellPreco.setCellValue(produtosPreco.getText());
+
+        }
+
+
+        //Escreve na memoria o preço Revenda
+        rownum = 0;
+        for (WebElement produtosRevenda : listaSaldaoRevenda) {
+
+            Row rowProduto = sheetDadosSaldao.getRow(rownum++);
+            int cellnum = 3;
+
+            Cell cellPreco = rowProduto.createCell(cellnum++);
+            cellPreco.setCellValue(produtosRevenda.getText());
+
+        }
+
+
+//Escreve na memoria o preço Lucre
+        rownum = 0;
+        for (WebElement produtosLucre : listaSaldaoLucre) {
+
+            Row rowProduto = sheetDadosSaldao.getRow(rownum++);
+            int cellnum = 4;
+
+            Cell cellPreco = rowProduto.createCell(cellnum++);
+            cellPreco.setCellValue(produtosLucre.getText());
+
+        }
+
+
+
+        //Pega tudo o que foi gravado na memória e escreve dentro de um arquivo .xls
+        try {
+            FileOutputStream out = new FileOutputStream(new File(SaldaoTeste.arquivo));
+            workbook.write(out);
+            out.close();
+            System.out.println("Excel escrito com sucesso!");
+
+            //Caso o xls não puder ser lido, cairá na excessão abaixo
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Problema de escrita no arquivo! O Arquivo pode estar sendo utilizado. Feche e tente novamente.");
+
+        }
+        //retira o menu na hora da evidência
+        {
+            Thread.sleep(15 * 1000);
+
+            String js;
+
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
+
+            js = "return document.getElementById('header').style.visibility = 'hidden'";
+            jse.executeScript(js);
+        }
+        //Tira print da tela com scroll
+        Screenshot TirarPrint = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(700)).takeScreenshot(driver);
+
+        try {
+
+            ImageIO.write(TirarPrint.getImage(), "PNG", new File("C://tmp//test" + timestamp() + ".png"));
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        //tirar print da tela
+        //driver.get("https://www.avoncomigo.avon.com.br/mail-landing/?targetPage=pt%2FavoncpgXX%2Fmais-produtos");
+        //File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        // local para salvar o print
+        // FileUtils.copyFile(scrFile, new File("c:\\tmp\\screenshot.png"));
+        //Fecha o navegador e encerra o programa de teste
+        driver.close();
+
+    }
+
+    //salva a evidência com data e hora do teste
+    @NotNull
+    public static String timestamp() {
+        return new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(new Date());
+    }
+}
